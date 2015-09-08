@@ -4,6 +4,7 @@ from os.path import isfile, join
 import argparse
 HTML_Begin='''<html>
 <head><title>%TITLE%</title>
+<meta charset="utf-8" /> 
 <style type="text/css"><!--
 .filelist{	padding-left:12px; }
 body .filelist {display:block;}
