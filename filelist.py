@@ -68,14 +68,16 @@ parser.add_argument('--top', action='store_true', help='use the top folders as h
 args = parser.parse_args()
 
 folderId = 0
+def removeDir(file,dir):
+  return file[len(dir):]
 def AddFile(file):
   return HTML_File.replace("%NAME%",file)
-def AddDir(dir, id, top = False):
+def AddDir(dir, id, dirabove, top = False):
   if top:
-    res = HTML_Headers.replace('%NAME%',dir)
+    res = HTML_Headers.replace('%NAME%',removeDir(dir,dirabove))
     res += '%FILELIST%'
   else:
-    res = HTML_Folder.replace('%NAME%',dir)
+    res = HTML_Folder.replace('%NAME%',removeDir(dir,dirabove))
     res = res.replace('%ID%',str(id))
   return res.replace('%FILELIST%',AddFilelist(dir))
   
@@ -85,11 +87,11 @@ def AddFilelist(dir, top = False):
     result = ""
   else:
     result = HTML_Filelist_Begin
-  for d in listdir(dir):
+  for d in sorted(listdir(dir)):
     if not isfile(join(dir,d)):
       folderId += 1
-      result += AddDir(join(dir,d),folderId, top)
-  for f in listdir(dir):
+      result += AddDir(join(dir,d),folderId, dir, top)
+  for f in sorted(listdir(dir)):
     if isfile(join(dir,f)):
       result += AddFile(f)
   if top:
