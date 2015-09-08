@@ -62,27 +62,35 @@ HTML_Folder='''
  %FILELIST%
 </div>
 '''
+parser = argparse.ArgumentParser(description='create a pretty html page of file-trees')
+parser.add_argument('--top', action='store_true', help='use the top folders as headlines')
+args = parser.parse_args()
+
 folderId = 0
 def AddFile(file):
   return HTML_File.replace("%NAME%",file)
-def AddDir(dir, id):
-  res = HTML_Folder.replace('%NAME%',dir)
-  res = res.replace('%ID%',str(id))
+def AddDir(dir, id, top = False):
+  if top:
+    res = HTML_Headers.replace('%NAME',dir)
+    res += '%FILELIST%'
+  else:
+    res = HTML_Folder.replace('%NAME%',dir)
+    res = res.replace('%ID%',str(id))
   return res.replace('%FILELIST%',AddFilelist(dir))
-def AddFilelist(dir):
+  
+def AddFilelist(dir, top = False):
   global folderId
   result = HTML_Filelist_Begin
   for d in listdir(dir):
     if not isfile(join(dir,d)):
       folderId += 1
-      result += AddDir(join(dir,d),folderId)
+      result += AddDir(join(dir,d),folderId, top)
   for f in listdir(dir):
     if isfile(join(dir,f)):
       result += AddFile(f)
   return result + HTML_Filelist_End
   
 res = HTML_Begin.replace('%TITLE%','Titel')
-res += HTML_Headers.replace('%NAME%','Name')
-res += AddFilelist('.')
+res += AddFilelist('.',args.top)
 res += HTML_End
 print res
