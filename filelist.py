@@ -72,7 +72,7 @@ def AddFile(file):
   return HTML_File.replace("%NAME%",file)
 def AddDir(dir, id, top = False):
   if top:
-    res = HTML_Headers.replace('%NAME',dir)
+    res = HTML_Headers.replace('%NAME%',dir)
     res += '%FILELIST%'
   else:
     res = HTML_Folder.replace('%NAME%',dir)
@@ -81,7 +81,10 @@ def AddDir(dir, id, top = False):
   
 def AddFilelist(dir, top = False):
   global folderId
-  result = HTML_Filelist_Begin
+  if top:
+    result = ""
+  else:
+    result = HTML_Filelist_Begin
   for d in listdir(dir):
     if not isfile(join(dir,d)):
       folderId += 1
@@ -89,6 +92,8 @@ def AddFilelist(dir, top = False):
   for f in listdir(dir):
     if isfile(join(dir,f)):
       result += AddFile(f)
+  if top:
+    return result
   return result + HTML_Filelist_End
   
 res = HTML_Begin.replace('%TITLE%','Titel')
