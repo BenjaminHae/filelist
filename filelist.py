@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, basename
 import argparse
 HTML_Begin='''<html>
 <head><title>%TITLE%</title>
@@ -65,21 +65,21 @@ HTML_Folder='''
 </div>
 '''
 parser = argparse.ArgumentParser(description='create a pretty html page of file-trees')
-parser.add_argument('--top', action='store_true', help='use the top folders as headlines')
-parser.add_argument('path', help='ids for actions', nargs='*', type=str, action='store', help='folders to print')
+parser.add_argument('--top', '-t', action='store_true', help='use the top folders as headlines')
+parser.add_argument('--ignore-subdirs', '-is', action='store_true', help='ignore all subfolders')
+parser.add_argument('--title', type=str, action='store', help='title of the webpage')
+parser.add_argument('path', nargs='*', type=str, action='store', help='folders to print')
 args = parser.parse_args()
 
 folderId = 0
-def removeDir(file,dir):
-  return os.path.basename(file)
 def AddFile(file):
   return HTML_File.replace("%NAME%",file)
-def AddDir(dir, id, dirabove, top = False):
+def AddDir(dir, id, top = False):
   if top:
-    res = HTML_Headers.replace('%NAME%',removeDir(dir,dirabove))
+    res = HTML_Headers.replace('%NAME%',basename(dir))
     res += '%FILELIST%'
   else:
-    res = HTML_Folder.replace('%NAME%',removeDir(dir,dirabove))
+    res = HTML_Folder.replace('%NAME%',basename(dir))
     res = res.replace('%ID%',str(id))
   return res.replace('%FILELIST%',AddFilelist(dir))
   
@@ -89,10 +89,13 @@ def AddFilelist(dir, top = False):
     result = ""
   else:
     result = HTML_Filelist_Begin
+  oldFolderId = folderId
   for d in sorted(listdir(dir)):
     if not isfile(join(dir,d)):
       folderId += 1
-      result += AddDir(join(dir,d),folderId, dir, top)
+      result += AddDir(join(dir,d),folderId, top)
+  if top and oldFolderId == folderId:
+    result += HTML_Headers.replace('%NAME%',basename(dir))
   for f in sorted(listdir(dir)):
     if isfile(join(dir,f)):
       result += AddFile(f)
@@ -100,15 +103,24 @@ def AddFilelist(dir, top = False):
     return result
   return result + HTML_Filelist_End
   
-res = HTML_Begin.replace('%TITLE%','Titel')
 path = args.path
 printHead = True
 if path == None or len(path) == 0:
   path = ['.']
+if len(path)==1:
   printHead=False
+  
+title = args.title
+if title == None or title=="":
+  title = "List of files"
+  if not printHead:
+    title += " in "+path[0]
+    
+  
+res = HTML_Begin.replace('%TITLE%',title)
 for folder in path:
   if printHead and not args.top:
-    res += HTML_Headers.replace('%NAME%',os.path.basename(folder))
+    res += HTML_Headers.replace('%NAME%',basename(folder))
   res += AddFilelist(folder,args.top)
 res += HTML_End
 print res
