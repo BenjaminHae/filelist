@@ -69,7 +69,7 @@ args = parser.parse_args()
 
 folderId = 0
 def removeDir(file,dir):
-  return file[len(dir):]
+  return file[len(dir)+1:]
 def AddFile(file):
   return HTML_File.replace("%NAME%",file)
 def AddDir(dir, id, dirabove, top = False):
