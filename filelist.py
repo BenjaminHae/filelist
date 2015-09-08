@@ -65,11 +65,12 @@ HTML_Folder='''
 '''
 parser = argparse.ArgumentParser(description='create a pretty html page of file-trees')
 parser.add_argument('--top', action='store_true', help='use the top folders as headlines')
+parser.add_argument('path', help='ids for actions', nargs='*', type=str, action='store', help='folders to print')
 args = parser.parse_args()
 
 folderId = 0
 def removeDir(file,dir):
-  return file[len(dir)+1:]
+  return os.path.basename(file)
 def AddFile(file):
   return HTML_File.replace("%NAME%",file)
 def AddDir(dir, id, dirabove, top = False):
@@ -99,6 +100,14 @@ def AddFilelist(dir, top = False):
   return result + HTML_Filelist_End
   
 res = HTML_Begin.replace('%TITLE%','Titel')
-res += AddFilelist('.',args.top)
+path = args.path
+printHead = True
+if path == None or len(path) == 0:
+  path = ['.']
+  printHead=False
+for folder in path:
+  if printHead and not args.top:
+    res += HTML_Headers.replace('%NAME%',os.path.basename(folder))
+  res += AddFilelist(folder,args.top)
 res += HTML_End
 print res
