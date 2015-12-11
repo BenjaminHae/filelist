@@ -2,7 +2,8 @@
 from os import listdir
 from os.path import isfile, join, basename
 import argparse
-from template_html import html
+from template_html import template_html
+from template_markdown import template_markdown
 
 parser = argparse.ArgumentParser(description='create a pretty html page of file-trees')
 parser.add_argument('--top', '-t', action='store_true', help='use the top folders as headlines')
@@ -12,14 +13,16 @@ parser.add_argument('--type', type=str, action='store', default='html', choices=
 parser.add_argument('path', nargs='*', type=str, action='store', help='folders to print')
 args = parser.parse_args()
 
+template=eval('template_'+args.type)
+
 folderId = 0
 def AddFile(file):
-  return html['file'](file)
+  return template['file'](file)
 def AddDir(dir, id, top = False):
   if top:
-      res = lambda filelist: html['headers'](basename(dir))+filelist
+      res = lambda filelist: template['headers'](basename(dir))+filelist
   else:
-      res = lambda filelist: html['folder'](str(id),basename(dir), filelist)
+      res = lambda filelist: template['folder'](str(id),basename(dir), filelist)
   return res(AddFilelist(dir))
   
 def AddFilelist(dir, top = False):
@@ -27,20 +30,20 @@ def AddFilelist(dir, top = False):
   if top:
     result = ""
   else:
-    result = html['filelist_begin']
+    result = template['filelist_begin']
   oldFolderId = folderId
   for d in sorted(listdir(dir)):
     if not isfile(join(dir,d)):
       folderId += 1
       result += AddDir(join(dir,d),folderId, top)
   if top and oldFolderId == folderId:
-    result += html['headers'](basename(dir))
+    result += template['headers'](basename(dir))
   for f in sorted(listdir(dir)):
     if isfile(join(dir,f)):
       result += AddFile(f)
   if top:
     return result
-  return result + html['filelist_end']
+  return result + template['filelist_end']
   
 path = args.path
 printHead = True
@@ -56,10 +59,10 @@ if title == None or title=="":
     title += " in "+path[0]
     
   
-res = html['begin'](title)
+res = template['begin'](title)
 for folder in path:
   if printHead and not args.top:
-    res += html['headers'](basename(folder))
+    res += template['headers'](basename(folder))
   res += AddFilelist(folder,args.top)
-res += html['end']
+res += template['end']
 print res

@@ -1,4 +1,4 @@
-html = {
+template_html = {
 'begin': lambda title : '''<html>
 <head><title>%TITLE%</title>
 <meta charset="utf-8" /> 
