@@ -5,6 +5,6 @@ template_markdown = {
 
 'filelist_begin':'',
 'filelist_end':'',
-'file':lambda name: "  * "+name+"  \r\n",
+'file':lambda name: "  * " + name + "\r\n",
 'folder':lambda id, name, filelist:"  * **"+name+"**  \r\n"+''.join(map(lambda s: " "*4+s, filelist.splitlines(True)))+"\r\n",
 }
