@@ -11,6 +11,7 @@ parser.add_argument('--ignore-subdirs', '-is', action='store_true', help='ignore
 parser.add_argument('--title', type=str, action='store', help='title of the webpage')
 parser.add_argument('--type', type=str, action='store', default='html', choices=['html','markdown'],  help='type of output')
 parser.add_argument('--all', '-a', action='store_true', help='show hidden files(UNIX only)')
+parser.add_argument('--output', '-o', type=str, action='store', help='output file(default STDOUT), not implemented yet')
 parser.add_argument('path', nargs='*', type=str, action='store', help='folders to print')
 args = parser.parse_args()
 
