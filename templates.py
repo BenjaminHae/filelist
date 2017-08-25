@@ -1,6 +1,6 @@
 html = {
 'begin':lambda title, call: title + call,
-'end':'',
+'end':lambda call: call,
 'headers':lambda name: name,
 'filelist_begin':'',
 'filelist_end':'',

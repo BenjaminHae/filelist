@@ -54,13 +54,12 @@ function clickfolder(name)
 <h1>%TITLE%</h1>
 Alle <a onclick="showall()" class="closed">einblenden</a>/<a onclick="hideall()" class="open">ausblenden</a>
 '''.replace('%TITLE%',title).replace('%CALL%',call),
-'end':'</body></html>',
-'headers':lambda name : '<h2>'+name+'</h2>',
-'filelist_begin':'<div class="filelist">',
-'filelist_end':'</div>',
-'file': lambda name:'<div class="file">%NAME%</div>'.replace('%NAME%',name),
-'folder':lambda id, name, filelist: '''
-<div class="folder" id="%ID%"><a tag="%ID%" href="#%ID%" class="closed" onclick="clickfolder('%ID%')">%NAME%</a>
+'end':lambda call: '</body>\n</html>',
+'headers':lambda name : '<h2>'+name+'</h2>\n',
+'filelist_begin':'<div class="filelist">\n',
+'filelist_end':'</div>\n',
+'file': lambda name:'<div class="file">%NAME%</div>\n'.replace('%NAME%',name),
+'folder':lambda id, name, filelist: '''<div class="folder" id="%ID%"><a tag="%ID%" href="#%ID%" class="closed" onclick="clickfolder('%ID%')">%NAME%</a>
  %FILELIST%
 </div>
 '''.replace('%ID%',id).replace('%NAME%',name).replace('%FILELIST%',filelist),

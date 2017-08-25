@@ -1,6 +1,6 @@
 template_markdown = {
-'begin':lambda title, call: title+"\n"+"="*len(title)+"\n\n\t"+call+"\n\n",
-'end':'',
+'begin':lambda title, call: title+"\n"+"="*len(title)+"\n\n",
+'end':lambda call: "\n---\n\n\t"+call+"\n\n",
 'headers':lambda name: name+"\n"+"-"*len(name)+"\n",
 
 'filelist_begin':'',

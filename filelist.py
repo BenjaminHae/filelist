@@ -65,10 +65,11 @@ if title == None or title=="":
     title += " in "+path[0]
     
   
-res = template['begin'](title, ' '.join(sys.argv))
+call = " ".join(sys.argv)
+res = template['begin'](title, call)
 for folder in path:
   if printHead and not args.top:
     res += template['headers'](basename(folder))
   res += AddFilelist(folder, args.top, args.all)
-res += template['end']
+res += template['end'](call)
 print res
