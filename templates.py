@@ -1,5 +1,5 @@
 html = {
-'begin':lambda title: title,
+'begin':lambda title, call: title + call,
 'end':'',
 'headers':lambda name: name,
 'filelist_begin':'',

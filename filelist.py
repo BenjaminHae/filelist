@@ -2,6 +2,7 @@
 from os import listdir
 from os.path import isfile, join, basename
 import argparse
+import sys
 from template_html import template_html
 from template_markdown import template_markdown
 
@@ -64,7 +65,7 @@ if title == None or title=="":
     title += " in "+path[0]
     
   
-res = template['begin'](title)
+res = template['begin'](title, ' '.join(sys.argv))
 for folder in path:
   if printHead and not args.top:
     res += template['headers'](basename(folder))
